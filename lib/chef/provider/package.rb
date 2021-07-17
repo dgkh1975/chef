@@ -109,7 +109,7 @@ class Chef
 
       action :install do
         unless target_version_array.any?
-          logger.trace("#{new_resource} is already installed - nothing to do")
+          logger.debug("#{new_resource} is already installed - nothing to do")
           return
         end
 
@@ -138,7 +138,7 @@ class Chef
 
       action :upgrade do
         unless target_version_array.any?
-          logger.trace("#{new_resource} no versions to upgrade - nothing to do")
+          logger.debug("#{new_resource} no versions to upgrade - nothing to do")
           return
         end
 
@@ -177,7 +177,7 @@ class Chef
             logger.info("#{new_resource} removed")
           end
         else
-          logger.trace("#{new_resource} package does not exist - nothing to do")
+          logger.debug("#{new_resource} package does not exist - nothing to do")
         end
       end
 
@@ -229,7 +229,7 @@ class Chef
             end
           end
         else
-          logger.trace("#{new_resource} is already locked")
+          logger.debug("#{new_resource} is already locked")
         end
       end
 
@@ -248,7 +248,7 @@ class Chef
             end
           end
         else
-          logger.trace("#{new_resource} is already unlocked")
+          logger.debug("#{new_resource} is already unlocked")
         end
       end
 
@@ -446,8 +446,8 @@ class Chef
                   # requested new_resource.version constraints
                   logger.trace("#{new_resource} has no existing installed version. Installing install #{candidate_version}")
                   target_version_array.push(candidate_version)
-                elsif version_equals?(current_version, new_version)
-                  # this is a short-circuit to avoid needing to (expensively) query the candidate_version which must come later
+                elsif !use_magic_version? && version_equals?(current_version, new_version)
+                  # this is a short-circuit (mostly for the rubygems provider) to avoid needing to expensively query the candidate_version which must come later
                   logger.trace("#{new_resource} #{package_name} #{new_version} is already installed")
                   target_version_array.push(nil)
                 elsif candidate_version.nil?
@@ -598,12 +598,10 @@ class Chef
       # @return [Array] new_resource.source as an array
       def source_array
         @source_array ||=
-          begin
-            if new_resource.source.nil?
-              package_name_array.map { nil }
-            else
-              [ new_resource.source ].flatten
-            end
+          if new_resource.source.nil?
+            package_name_array.map { nil }
+          else
+            [ new_resource.source ].flatten
           end
       end
 
@@ -612,16 +610,14 @@ class Chef
       # @return [Array] Array of sources with package_names converted to sources
       def resolved_source_array
         @resolved_source_array ||=
-          begin
-            source_array.each_with_index.map do |source, i|
-              package_name = package_name_array[i]
-              # we require at least one '/' in the package_name to avoid [XXX_]package 'foo' breaking due to a random 'foo' file in cwd
-              if use_package_name_for_source? && source.nil? && package_name.match(/#{::File::SEPARATOR}/) && ::File.exist?(package_name)
-                logger.trace("No package source specified, but #{package_name} exists on filesystem, using #{package_name} as source.")
-                package_name
-              else
-                source
-              end
+          source_array.each_with_index.map do |source, i|
+            package_name = package_name_array[i]
+            # we require at least one '/' in the package_name to avoid [XXX_]package 'foo' breaking due to a random 'foo' file in cwd
+            if use_package_name_for_source? && source.nil? && package_name.match(/#{::File::SEPARATOR}/) && ::File.exist?(package_name)
+              logger.trace("No package source specified, but #{package_name} exists on filesystem, using #{package_name} as source.")
+              package_name
+            else
+              source
             end
           end
       end

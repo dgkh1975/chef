@@ -80,7 +80,7 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
     @systemd_service_status ||= begin
       # Collect all the status information for a service and returns it at once
       options, args = get_systemctl_options_args
-      s = shell_out!(systemctl_path, args, "show", "-p", "UnitFileState", "-p", "ActiveState", new_resource.service_name, options)
+      s = shell_out!(systemctl_path, args, "show", "-p", "UnitFileState", "-p", "ActiveState", new_resource.service_name, **options)
       # e.g. /bin/systemctl --system show  -p UnitFileState -p ActiveState sshd.service
       # Returns something like:
       # ActiveState=active
@@ -122,7 +122,7 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
 
   def start_service
     if current_resource.running
-      logger.trace("#{new_resource} already running, not starting")
+      logger.debug("#{new_resource} already running, not starting")
     else
       if new_resource.start_command
         super
@@ -135,7 +135,7 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
 
   def stop_service
     unless current_resource.running
-      logger.trace("#{new_resource} not running, not stopping")
+      logger.debug("#{new_resource} not running, not stopping")
     else
       if new_resource.stop_command
         super
@@ -170,7 +170,7 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
 
   def enable_service
     if current_resource.masked || current_resource.indirect
-      logger.trace("#{new_resource} cannot be enabled: it is masked or indirect")
+      logger.debug("#{new_resource} cannot be enabled: it is masked or indirect")
       return
     end
     options, args = get_systemctl_options_args
@@ -179,7 +179,7 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
 
   def disable_service
     if current_resource.masked || current_resource.indirect
-      logger.trace("#{new_resource} cannot be disabled: it is masked or indirect")
+      logger.debug("#{new_resource} cannot be disabled: it is masked or indirect")
       return
     end
     options, args = get_systemctl_options_args
@@ -202,6 +202,11 @@ class Chef::Provider::Service::Systemd < Chef::Provider::Service::Simple
   end
 
   def is_enabled?
+    # if the service is in sysv compat mode, shellout to determine if enabled
+    if systemd_service_status["UnitFileState"] == "bad"
+      options, args = get_systemctl_options_args
+      return shell_out(systemctl_path, args, "is-enabled", new_resource.service_name, "--quiet", **options).exitstatus == 0
+    end
     # See https://github.com/systemd/systemd/blob/master/src/systemctl/systemctl-is-enabled.c
     # Note: enabled-runtime is excluded because this is volatile, and the state of enabled-runtime
     # specifically means that the service is not enabled

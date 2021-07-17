@@ -49,7 +49,7 @@ class Chef
 
       **Create a scheduled task to run every 2 days**:
 
-      ``` ruby
+      ```ruby
       windows_task 'chef-client' do
         command 'chef-client'
         run_level :highest
@@ -549,7 +549,7 @@ class Chef
           if @current_resource.exists
             task.get_task(new_resource.task_name)
             @current_resource.task = task
-            pathed_task_name = new_resource.task_name.start_with?('\\') ? new_resource.task_name : "\\#{new_resource.task_name}"
+            pathed_task_name = new_resource.task_name.start_with?("\\") ? new_resource.task_name : "\\#{new_resource.task_name}"
             @current_resource.task_name(pathed_task_name)
           end
           @current_resource
@@ -1009,7 +1009,7 @@ class Chef
             end
           end
         else
-          logger.warn "#{new_resource} task does not exist - nothing to do"
+          logger.debug "#{new_resource} task does not exist - nothing to do"
         end
       end
 
@@ -1022,7 +1022,7 @@ class Chef
             ts.delete(current_resource.task_name)
           end
         else
-          logger.warn "#{new_resource} task does not exist - nothing to do"
+          logger.debug "#{new_resource} task does not exist - nothing to do"
         end
       end
 
@@ -1030,14 +1030,14 @@ class Chef
         if current_resource.exists
           logger.trace "#{new_resource} task exists"
           if current_resource.task.status != "running"
-            logger.trace "#{new_resource} is not running - nothing to do"
+            logger.debug "#{new_resource} is not running - nothing to do"
           else
             converge_by("#{new_resource} task ended") do
               current_resource.task.stop
             end
           end
         else
-          logger.warn "#{new_resource} task does not exist - nothing to do"
+          logger.debug "#{new_resource} task does not exist - nothing to do"
         end
       end
 
@@ -1050,7 +1050,7 @@ class Chef
               run_schtasks "CHANGE", "ENABLE" => ""
             end
           else
-            logger.trace "#{new_resource} already enabled - nothing to do"
+            logger.debug "#{new_resource} already enabled - nothing to do"
           end
         else
           logger.fatal "#{new_resource} task does not exist - nothing to do"

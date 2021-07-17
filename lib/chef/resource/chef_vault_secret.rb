@@ -33,7 +33,7 @@ class Chef
         ```ruby
         chef_vault_secret 'foo' do
           data_bag 'bar'
-          raw_data({'auth' => 'baz'})
+          raw_data({ 'auth' => 'baz' })
           admins 'jtimberman'
           search '*:*'
         end
@@ -45,7 +45,7 @@ class Chef
         chef_vault_secret 'root-password' do
           admins 'jtimberman,paulmooring'
           data_bag 'secrets'
-          raw_data({'auth' => 'DoNotUseThisPasswordForRoot'})
+          raw_data({ 'auth' => 'DoNotUseThisPasswordForRoot' })
           search '*:*'
         end
         ```
@@ -88,8 +88,7 @@ class Chef
 
       end
 
-      action :create do
-        description "Creates the item, or updates it if it already exists."
+      action :create, description: "Creates the item, or updates it if it already exists." do
 
         converge_if_changed do
           item = ChefVault::Item.new(new_resource.data_bag, new_resource.id)
@@ -111,15 +110,11 @@ class Chef
         end
       end
 
-      action :create_if_missing do
-        description "Calls the create action unless it exists."
-
+      action :create_if_missing, description: "Calls the create action unless it exists." do
         action_create if current_resource.nil?
       end
 
-      action :delete do
-        description "Deletes the item and the item's keys ('id'_keys)."
-
+      action :delete, description: "Deletes the item and the item's keys ('id'_keys)." do
         chef_data_bag_item new_resource.id do
           data_bag new_resource.data_bag
           action :delete

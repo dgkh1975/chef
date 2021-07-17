@@ -38,20 +38,10 @@ steps:
         image: rubydistros/ubuntu-18.04:2.6
 
 #########################################################################
-  # Tests Ruby 2.7
+  # Tests Ruby 3.0
 #########################################################################
 
-- label: "Chefstyle :ruby: 2.7"
-  commands:
-    - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
-    - bundle exec rake style
-  expeditor:
-    executor:
-      docker:
-        image: rubydistros/ubuntu-18.04:2.7
-
-- label: "Integration Ubuntu 18.04 :ruby: 2.7"
+- label: "Integration Ubuntu 18.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -59,34 +49,34 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
         privileged: true
 
-- label: "Functional Ubuntu 18.04 :ruby: 2.7"
+- label: "Functional Ubuntu 18.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - apt-get update -y
     - apt-get install -y cron locales # needed for functional tests to pass
-    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:functional
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
         privileged: true
 
-- label: "Unit Ubuntu 18.04 :ruby: 2.7"
+- label: "Unit Ubuntu 18.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:unit
     - bundle exec rake component_specs
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
 
-- label: "Integration Ubuntu 20.04 :ruby: 2.7"
+- label: "Integration Ubuntu 20.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -94,34 +84,34 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-20.04:2.7
+        image: rubydistros/ubuntu-20.04:3.0
         privileged: true
 
-- label: "Functional Ubuntu 20.04 :ruby: 2.7"
+- label: "Functional Ubuntu 20.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - apt-get update -y
     - apt-get install -y cron locales # needed for functional tests to pass
-    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:functional
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-20.04:2.7
+        image: rubydistros/ubuntu-20.04:3.0
         privileged: true
 
-- label: "Unit Ubuntu 20.04 :ruby: 2.7"
+- label: "Unit Ubuntu 20.04 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:unit
     - bundle exec rake component_specs
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-20.04:2.7
+        image: rubydistros/ubuntu-20.04:3.0
 
-- label: "Integration CentOS 7 :ruby: 2.7"
+- label: "Integration CentOS 7 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -129,33 +119,33 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/centos-7:2.7
+        image: rubydistros/centos-7:3.0
         privileged: true
 
-- label: "Functional CentOS 7 :ruby: 2.7"
+- label: "Functional CentOS 7 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - yum install -y crontabs e2fsprogs
-    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:functional
   expeditor:
     executor:
       docker:
-        image: rubydistros/centos-7:2.7
+        image: rubydistros/centos-7:3.0
         privileged: true
 
-- label: "Unit CentOS 7 :ruby: 2.7"
+- label: "Unit CentOS 7 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:unit
     - bundle exec rake component_specs
   expeditor:
     executor:
       docker:
-        image: rubydistros/centos-7:2.7
+        image: rubydistros/centos-7:3.0
 
-- label: "Integration openSUSE 15 :ruby: 2.7"
+- label: "Integration openSUSE 15 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - zypper install -y cron insserv-compat
@@ -164,34 +154,34 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/opensuse-15:2.7
+        image: rubydistros/opensuse-15:3.0
         privileged: true
 
-- label: "Functional openSUSE 15 :ruby: 2.7"
+- label: "Functional openSUSE 15 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - zypper install -y cronie insserv-compat
-    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:functional
   expeditor:
     executor:
       docker:
-        image: rubydistros/opensuse-15:2.7
+        image: rubydistros/opensuse-15:3.0
         privileged: true
 
-- label: "Unit openSUSE 15 :ruby: 2.7"
+- label: "Unit openSUSE 15 :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - zypper install -y cron insserv-compat
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:unit
     - bundle exec rake component_specs
   expeditor:
     executor:
       docker:
-        image: rubydistros/opensuse-15:2.7
+        image: rubydistros/opensuse-15:3.0
 
-- label: "Integration Fedora :ruby: 2.7"
+- label: "Integration Fedora :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -199,36 +189,36 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/fedora-latest:2.7
+        image: rubydistros/fedora-latest:3.0
         privileged: true
 
-- label: "Functional Fedora :ruby: 2.7"
+- label: "Functional Fedora :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - dnf install -y crontabs e2fsprogs
-    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - cd /workdir; bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:functional
   expeditor:
     executor:
       docker:
-        image: rubydistros/fedora-latest:2.7
+        image: rubydistros/fedora-latest:3.0
         privileged: true
         environment:
           - FORCE_FFI_YAJL=ext
           - CHEF_LICENSE=accept-no-persist
 
-- label: "Unit Fedora :ruby: 2.7"
+- label: "Unit Fedora :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package ruby_prof
+    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
     - bundle exec rake spec:unit
     - bundle exec rake component_specs
   expeditor:
     executor:
       docker:
-        image: rubydistros/fedora-latest:2.7
+        image: rubydistros/fedora-latest:3.0
 
-- label: "Functional Windows :ruby: 2.7"
+- label: "Functional Windows :ruby: 3.0"
   commands:
     - .expeditor/scripts/bk_win_functional.ps1
   expeditor:
@@ -238,37 +228,27 @@ steps:
         single-use: true
         shell: ["powershell", "-Command"]
 
-- label: "Integration Windows :ruby: 2.7"
+- label: "Integration Windows :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_win_integration.ps1
   expeditor:
     executor:
       docker:
         host_os: windows
-        image: rubydistros/windows-2019:2.7
+        image: rubydistros/windows-2019:3.0
         environment:
           - FORCE_FFI_YAJL=ext
           - CHEF_LICENSE=accept-no-persist
         shell: ["powershell", "-Command"]
 
-- label: "Chocolatey Windows :ruby: 2.7"
-  commands:
-    - /workdir/.expeditor/scripts/bk_run_choco.ps1
-  expeditor:
-    executor:
-      docker:
-        host_os: windows
-        image: rubydistros/windows-2019:2.7
-        shell: ["powershell", "-Command"]
-
-- label: "Unit Windows :ruby: 2.7"
+- label: "Unit Windows :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_win_unit.ps1
   expeditor:
     executor:
       docker:
         host_os: windows
-        image: rubydistros/windows-2019:2.7
+        image: rubydistros/windows-2019:3.0
         environment:
           - FORCE_FFI_YAJL=ext
           - CHEF_LICENSE=accept-no-persist
@@ -278,17 +258,7 @@ steps:
   # EXTERNAL GEM TESTING
 #########################################################################
 
-- label: "chef-sugar gem :ruby: 2.7"
-  commands:
-    - /workdir/.expeditor/scripts/bk_container_prep.sh
-    - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
-    - bundle exec tasks/bin/run_external_test chef/chef-sugar master rake
-  expeditor:
-    executor:
-      docker:
-        image: rubydistros/ubuntu-18.04:2.7
-
-- label: "chef-zero gem :ruby: 2.7"
+- label: "chef-zero gem :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -296,12 +266,12 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
         environment:
           - PEDANT_OPTS=--skip-oc_id
           - CHEF_FS=true
 
-- label: "cheffish gem :ruby: 2.7"
+- label: "cheffish gem :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -309,9 +279,9 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
 
-- label: "chefspec gem :ruby: 2.7"
+- label: "chefspec gem :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -319,9 +289,9 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
 
-- label: "knife-windows gem :ruby: 2.7"
+- label: "knife-windows gem :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - bundle install --jobs=3 --retry=3 --path=vendor/bundle --without omnibus_package
@@ -329,9 +299,9 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
+        image: rubydistros/ubuntu-18.04:3.0
 
-- label: "berkshelf gem :ruby: 2.7"
+- label: "berkshelf gem :ruby: 3.0"
   commands:
     - /workdir/.expeditor/scripts/bk_container_prep.sh
     - apt-get update -y
@@ -341,244 +311,7 @@ steps:
   expeditor:
     executor:
       docker:
-        image: rubydistros/ubuntu-18.04:2.7
-
-#########################################################################
-  # START TEST KITCHEN ONLY
-#########################################################################
-
-- label: "Kitchen: Amazon Linux 2"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-amazonlinux-2
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Ubuntu 18.04"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-ubuntu-1804
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Ubuntu 20.04"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-ubuntu-2004
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Ubuntu 21.04"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-ubuntu-2104
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Debian 9"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-debian-9
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Debian 10"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-debian-10
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Debian 11"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-debian-11
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: CentOS 6"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-centos-6
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: CentOS 7"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-centos-7
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: CentOS 8"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-centos-8
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Oracle Linux 7"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-oraclelinux-7
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Oracle Linux 8"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-oraclelinux-8
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: Fedora latest"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-fedora-latest
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Kitchen: openSUSE Leap: 15"
-  commands:
-    - .expeditor/scripts/bk_linux_exec.sh
-    - . /var/lib/buildkite-agent/.asdf/asdf.sh
-    - cd kitchen-tests
-    - bundle exec kitchen test end-to-end-opensuse-leap-15
-  artifact_paths:
-    - $PWD/.kitchen/logs/kitchen.log
-  env:
-      KITCHEN_YAML: kitchen.yml
-  expeditor:
-    executor:
-      linux:
-        privileged: true
-        single-use: true
-
-- label: "Spellcheck"
-  commands:
-    - npm install -g cspell
-    - rake -f tasks/spellcheck.rb spellcheck
-  soft_fail: true
-  expeditor:
-    executor:
-      docker:
+        image: rubydistros/ubuntu-18.04:3.0
 
 - label: ":habicat: Linux plan"
   commands:

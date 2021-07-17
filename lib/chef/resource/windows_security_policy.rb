@@ -28,6 +28,7 @@ class Chef
 
       # The valid policy_names options found here
       # https://github.com/ChrisAWalker/cSecurityOptions under 'AccountSettings'
+      # This needs to be revisited - the list at the link above is non-exhaustive and is missing a couple of items
       policy_names = %w{LockoutDuration
                         MaximumPasswordAge
                         MinimumPasswordAge
@@ -36,6 +37,8 @@ class Chef
                         PasswordHistorySize
                         LockoutBadCount
                         ResetLockoutCount
+                        AuditPolicyChange
+                        LockoutDuration
                         RequireLogonToChangePassword
                         ForceLogoffWhenHourExpire
                         NewAdministratorName
@@ -83,22 +86,22 @@ class Chef
       property :secvalue, String, required: true,
       description: "Policy value to be set for policy name."
 
-      load_current_value do |desired|
+      load_current_value do |new_resource|
         current_state = load_security_options
 
-        if desired.secoption == "ResetLockoutCount"
-          if desired.secvalue.to_i > 30
-            raise Chef::Exceptions::ValidationFailed, "The \"ResetLockoutCount\" value cannot be greater than 30 minutes"
+        if new_resource.secoption == "ResetLockoutCount"
+          if new_resource.secvalue.to_i > current_state["LockoutDuration"].to_i
+            raise Chef::Exceptions::ValidationFailed, "The \"ResetLockoutCount\" value cannot be greater than the value currently set for \"LockoutDuration\""
           end
         end
-        if (desired.secoption == "ResetLockoutCount" || desired.secoption == "LockoutDuration") && current_state["LockoutBadCount"] == "0"
-          raise Chef::Exceptions::ValidationFailed, "#{desired.secoption} cannot be set unless the \"LockoutBadCount\" security policy has been set to a non-zero value"
+        if (new_resource.secoption == "ResetLockoutCount" || new_resource.secoption == "LockoutDuration") && current_state["LockoutBadCount"] == "0"
+          raise Chef::Exceptions::ValidationFailed, "#{new_resource.secoption} cannot be set unless the \"LockoutBadCount\" security policy has been set to a non-zero value"
         end
 
-        secvalue current_state[desired.secoption.to_s]
+        secvalue current_state[new_resource.secoption.to_s]
       end
 
-      action :set do
+      action :set, description: "Set the Windows security policy" do
         converge_if_changed :secvalue do
           security_option = new_resource.secoption
           security_value = new_resource.secvalue
@@ -115,13 +118,13 @@ class Chef
             policy_line = "#{security_option} = \"#{security_value}\""
             file.write("[Unicode]\r\nUnicode=yes\r\n[System Access]\r\n#{policy_line}\r\n[Version]\r\nsignature=\"$CHICAGO$\"\r\nRevision=1\r\n")
             file.close
-            file_path = file.path.gsub("/", '\\')
+            file_path = file.path.tr("/", "\\")
             cmd = "C:\\Windows\\System32\\secedit /configure /db C:\\windows\\security\\new.sdb /cfg #{file_path} /areas SECURITYPOLICY"
           else
             policy_line = "#{security_option} = #{security_value}"
             file.write("[Unicode]\r\nUnicode=yes\r\n[System Access]\r\n#{policy_line}\r\n[Version]\r\nsignature=\"$CHICAGO$\"\r\nRevision=1\r\n")
             file.close
-            file_path = file.path.gsub("/", '\\')
+            file_path = file.path.tr("/", "\\")
             cmd = "C:\\Windows\\System32\\secedit /configure /db C:\\windows\\security\\new.sdb /cfg #{file_path} /areas SECURITYPOLICY"
           end
           shell_out!(cmd)

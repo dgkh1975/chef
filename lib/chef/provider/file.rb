@@ -152,12 +152,12 @@ class Chef
         unless ::File.exist?(new_resource.path)
           action_create
         else
-          logger.trace("#{new_resource} exists at #{new_resource.path} taking no action.")
+          logger.debug("#{new_resource} exists at #{new_resource.path} taking no action.")
         end
       end
 
       action :delete do
-        if ::File.exists?(new_resource.path)
+        if ::File.exist?(new_resource.path)
           converge_by("delete file #{new_resource.path}") do
             do_backup unless file_class.symlink?(new_resource.path)
             ::File.delete(new_resource.path)
@@ -338,7 +338,7 @@ class Chef
           raise Chef::Exceptions::ChecksumMismatch.new(short_cksum(new_resource.checksum), short_cksum(tempfile_checksum))
         end
 
-        if tempfile
+        if tempfile && contents_changed?
           new_resource.verify.each do |v|
             unless v.verify(tempfile.path)
               backupfile = "#{Chef::Config[:file_cache_path]}/failed_validations/#{::File.basename(tempfile.path)}"
@@ -393,7 +393,7 @@ class Chef
         # a nil tempfile is okay, means the resource has no content or no new content
         return if tempfile.nil?
         # but a tempfile that has no path or doesn't exist should not happen
-        if tempfile.path.nil? || !::File.exists?(tempfile.path)
+        if tempfile.path.nil? || !::File.exist?(tempfile.path)
           raise "#{ChefUtils::Dist::Infra::CLIENT} is confused, trying to deploy a file that has no path or does not exist..."
         end
 

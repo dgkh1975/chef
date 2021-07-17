@@ -49,7 +49,7 @@ class Chef
 
       property :lc_env, Hash,
         description: "A Hash of LC_* env variables in the form of `({ 'LC_ENV_VARIABLE' => 'VALUE' })`.",
-        default: lazy { {} },
+        default: {},
         coerce: proc { |h|
           if h.respond_to?(:keys)
             invalid_keys = h.keys - LC_VARIABLES
@@ -97,8 +97,7 @@ class Chef
         powershell_exec("Get-WinSystemLocale").result["Name"]
       end
 
-      action :update do
-        description "Update the system's locale."
+      action :update, description: "Update the system's locale." do
         converge_if_changed do
           set_system_locale
         end
